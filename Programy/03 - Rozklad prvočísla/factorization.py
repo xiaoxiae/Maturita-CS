@@ -1,7 +1,6 @@
 from math import sqrt, floor
 
-print("The number to factorize: ", end="")
-number = int(input())
+number = int(input("The number to factorize: "))
 
 # Go through all the numbers under sqrt(num) and check, if they are factors
 factors = []

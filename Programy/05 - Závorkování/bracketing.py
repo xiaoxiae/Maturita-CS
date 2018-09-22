@@ -1,4 +1,4 @@
-aithmeticExpression = input()
+aithmeticExpression = input("Input an arithmetic expression to check: ")
 
 # Brackets to look for
 openingBrackets = ['(', '[', '{']
@@ -20,7 +20,13 @@ for char in aithmeticExpression:
                 bracketList.pop()
             else:
                 print("Wrong!")
+                input()
                 quit()
-print("Right!")
+
+# If there are no remainding brackets to be closed, the expression is correct
+if len(bracketList) == 0:
+    print("Right!")
+else:
+    print("Wrong!")
 
 input()

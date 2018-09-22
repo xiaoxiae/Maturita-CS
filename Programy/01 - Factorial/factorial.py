@@ -1,5 +1,4 @@
-print("How big of a factorial to calculate: ", end="")
-factorial = int(input())
+factorial = int(input("How big of a factorial to calculate: "))
 
 # Reverse the input (and convert to numbers) to operate easily
 result = [int(char) for char in reversed(str(factorial))]
@@ -23,5 +22,5 @@ for i in range(2, factorial):
 print(str(factorial)+"! = ", end="")
 for number in reversed(result):
     print(number, end="")
-    
+
 input()

@@ -1,5 +1,4 @@
-print("The limit to which to look for primes: ", end="")
-limit = int(input())
+limit = int(input("The limit under which to look for primes: "))
 
 # Create a boolean array
 sieveList = [True] * limit
