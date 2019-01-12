@@ -6,7 +6,7 @@ class Node:
 
 class LinkedList:
     """Implements a linked list and some of its common operations."""
-    def __init__(self, list):
+    def __init__(self, list=[]):
         """Initializes the values of the linked list from a normal list."""
         self.length = 0
         previousNode = None
@@ -20,8 +20,8 @@ class LinkedList:
         # Set the first node
         self.firstNode = previousNode
 
-    def getLength(self):
-        """Returns the length of the linked list."""
+    def __len__(self):
+        """Defines the result of a len() call on a LinkedList object."""
         return self.length
 
     def getList(self):
@@ -36,7 +36,7 @@ class LinkedList:
 
         return list
 
-    def add(self, element, index):
+    def add(self, element, index=0):
         """Adds an element to an index of the list."""
         # Special case for 0 - firstNode needs to be replaced
         if (index == 0):
@@ -53,7 +53,7 @@ class LinkedList:
             previousNode.reference = node
             self.length += 1
 
-    def remove(self, index):
+    def remove(self, index=0):
         """Removes an element at an index of the list."""
         # Value of the element to return after deletion
         value = 0
@@ -83,6 +83,7 @@ class LinkedList:
 
         previousNode = self.firstNode
 
+        # Traverse the list until the element is found (or not)
         for i in range(0, self.length):
             if previousNode.value == element:
                 return i
