@@ -6,3 +6,5 @@ for i in range(1, len(coefficients)):
     value = x * value + coefficients[i]
 
 print("y = "+str(value))
+
+input()

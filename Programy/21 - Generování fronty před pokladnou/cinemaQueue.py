@@ -18,3 +18,5 @@ groupSize = int(input("How many people are there in each of the groups: "))
 groupSizeList = [0 for _x in range(groupSize * 2)]
 
 recursiveQueue(groupSize, groupSize, groupSizeList, 0)
+
+input()
