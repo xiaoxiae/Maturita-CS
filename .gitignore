@@ -1,5 +1,12 @@
-# Ignore WIP programs
+﻿# WIP programs
 Rozpracované/
 
-# Ignore the rest of the Mastermind app
+# PyCharm files
+.idea/
+
+# C# projects files
 Mastermind/
+ImageEditor/
+
+# binary/output files
+__pycache__/
