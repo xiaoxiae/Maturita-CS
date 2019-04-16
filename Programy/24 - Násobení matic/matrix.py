@@ -1,43 +1,42 @@
 from copy import deepcopy
 
+
 class Matrix:
     """A Python implementation of a matrix class and some of its operations."""
     matrix = None
 
-    def __init__(self, input):
+    def __init__(self, values):
         """Creates a matrix from a list of values."""
-        self.matrix = input
+        self.matrix = values
 
         # check for row length and values
-        row_length = len(input[0])
+        row_length = len(values[0])
         for row in self.matrix:
 
             # check for the correct length of the row
             if len(row) != row_length:
-                raise ValueError("Input matrix has the wrong dimensions!")
+                raise ValueError("Input matrix has incorrect dimensions!")
 
-            # check for non-numberical values.
+            # check for non-numerical values.
             for number in row:
                 if type(number) != int and type(number) != float:
                     raise ValueError("Input matrix contains non-numberics!")
-
 
     def __str__(self):
         """Defines the string representation of the matrix."""
         return str(self.matrix)
 
-
     def __add__(self, other):
         """Defines matrix addition."""
         # if we are trying to add something else than a matrix, throw TypeError
         if type(other) != Matrix:
-            raise TypeError("Undefined addition operation!")
+            raise TypeError("Undefined addition operation on type <%s>!" % (str(type(other).__name__)))
 
         m1, m2 = self.matrix, other.matrix
 
         # if dimensions of the matrices don't match up
         if len(m1) != len(m2) or len(m1[0]) != len(m2[0]):
-            raise TypeError("Wrong matrix dimensions!")
+            raise ValueError("Mismatched matrix dimensions!")
 
         # perform the addition
         result = [[0] * len(m1[0]) for _x in range(len(m1))]
@@ -47,27 +46,22 @@ class Matrix:
 
         return Matrix(result)
 
-
     def __sub__(self, other):
         """Defines matrix subtraction (in terms of addition)."""
         return self.__add__(other * -1)
 
-
     def __mul__(self, other):
         """Defines scalar and matrix multiplication for a matrix object."""
-        if (type(other) == int or type(other) == float):
-            # Scalar multiplication
+        if type(other) == int or type(other) == float:
+            # scalar multiplication
             return self.__scalar_multiplication(other)
-        elif (type(other) == Matrix):
-            # Vector multiplication
+        elif type(other) == Matrix:
+            # vector multiplication
             return self.__matrix_multiplication(other)
         else:
-            raise TypeError("Undefined multiplication operation!")
+            raise TypeError("Undefined multiplication operation on type <%s>!" % (str(type(other).__name__)))
 
-
-    # reverse multiplication is the same as normal multiplication for matrices
     __rmul__ = __mul__
-
 
     def __scalar_multiplication(self, scalar):
         """Returns a result of scalar multiplication."""
@@ -81,15 +75,14 @@ class Matrix:
 
         return Matrix(m)
 
-
     def __matrix_multiplication(self, other):
         """Returns a result of matrix multiplication."""
         m1 = self.matrix
         m2 = other.matrix
 
         # check for correct matrix dimensions
-        if (len(m1[0]) != len(m2)):
-            raise TypeError("Wrong matrix size for matrix multiplication.")
+        if len(m1[0]) != len(m2):
+            raise ValueError("Wrong matrix size for matrix multiplication.")
 
         # perform the matrix multiplication
         result = [[0] * len(m2[0]) for _x in range(len(m1))]

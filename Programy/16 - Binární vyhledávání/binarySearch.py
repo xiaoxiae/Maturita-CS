@@ -1,37 +1,32 @@
 from random import randint
 
-def binarySearch(list, element):
-    # Generate starting and ending boundaries
-    start = 0
-    end = len(list)
-    found = False
+
+def binary_search(sorted_list, element):
+    """Performs a binary search on a sorted list."""
+    # generate starting and ending boundaries
+    start, end = 0, len(sorted_list)
 
     while start < end:
         pivot = (start + end) // 2
 
-        # If the number is not pivot, cut the interval in half
-        if number < list[pivot]:
+        # if the number is not pivot, cut the interval in half in the appropriate direction
+        if element < sorted_list[pivot]:
             end = pivot - 1
-        elif number > list[pivot]:
+        elif element > sorted_list[pivot]:
             start = pivot + 1
         else:
-            # We still need to make sure that this is the first occurence
+            # to find the very first occurrence in the sorted list
             end = pivot
-            found = True
 
-    if (found):
+    if sorted_list[start] == element:
         return start
     else:
         return -1
 
 
-listSize = int(input("Generate random list of size: "))
-list = sorted([randint(0, listSize) for _x in range(0, listSize)])
-
-print("List: "+str(list))
+size = int(input("Generate random integer list of size: "))
+generated_list = sorted([randint(0, size) for _x in range(0, size)])
+print("Generated list: " + str(generated_list))
 
 number = int(input("Number to search for: "))
-
-print("Index of the number: "+str(binarySearch(list, number)))
-
-input()
+input("Index of the number: " + str(binary_search(generated_list, number)))

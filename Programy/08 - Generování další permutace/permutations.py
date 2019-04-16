@@ -16,7 +16,7 @@ def permutations(array):
 
                         array[k], array[reverseK] = array[reverseK], array[k]
 
-                    # print the new permutation and start the process over
+                    # yield the new permutation and start the process over
                     yield array
                     i = len(array) - 1
                     break
@@ -26,10 +26,10 @@ def permutations(array):
 
 
 size = int(input("How big of a list to generate permutations of: "))
-list = [x for x in range(1, size + 1)]
+l = [x for x in range(1, size + 1)]
 
-print(list)
-for permutation in permutations(list):
+print(l)
+for permutation in permutations(l):
     print(permutation)
 
 input()

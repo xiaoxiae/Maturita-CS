@@ -1,32 +1,28 @@
-aithmeticExpression = input("Input an arithmetic expression to check: ")
+arithmetic_expression = input("Input an arithmetic expression to check: ")
 
-# Brackets to look for
-openingBrackets = ['(', '[', '{']
-closingBrackets = [')', ']', '}']
+# brackets to look for
+opening_brackets = ['(', '[', '{']
+closing_brackets = [')', ']', '}']
 
-# A stack to keep the opening brackets in
-bracketList = []
+# a stack to keep the opening brackets in
+bracket_list = []
 
-for char in aithmeticExpression:
-    # Look trough both the bracket groups
-    for i in range(0, len(openingBrackets)):
-        # If it's opening, add it to the stack
-        if char == openingBrackets[i]:
-            bracketList.append(char)
-        elif char == closingBrackets[i]:
-            # If it's closing, if the opposite one isn't in the stack or the
-            # stack is empty, the bracketing is wrong
-            if len(bracketList) != 0 and bracketList[-1] == openingBrackets[i]:
-                bracketList.pop()
+for char in arithmetic_expression:
+    for i in range(len(opening_brackets)):
+        # if it's opening, add it to the stack
+        if char == opening_brackets[i]:
+            bracket_list.append(char)
+        elif char == closing_brackets[i]:
+            # if the opposite one isn't in the stack or the stack is empty, the
+            # bracketing is wrong
+            if len(bracket_list) != 0 and bracket_list[-1] == opening_brackets[i]:
+                bracket_list.pop()
             else:
-                print("Wrong!")
-                input()
+                input("Wrong!")
                 quit()
 
-# If there are no remainding brackets to be closed, the expression is correct
-if len(bracketList) == 0:
-    print("Right!")
+# if there are no remaining brackets to be closed, the expression is correct
+if len(bracket_list) == 0:
+    input("Right!")
 else:
-    print("Wrong!")
-
-input()
+    input("Wrong!")

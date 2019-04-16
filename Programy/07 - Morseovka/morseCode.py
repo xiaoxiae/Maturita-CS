@@ -1,92 +1,91 @@
-def toMorseCode(line, outputFileName):
+def to_morse_code(line, outputFileName):
     """Converts a line of normal text to morse code and appends the result to a
     specified file."""
 
-    # Morse codes for a, b, c,..., respectively
-    morseCodes = [".-", "-...", "-.-.", "-..", ".", "..-.", "--.", "....",
-    "..", ".---", "-.-", ".-..", "--", "-.", "---", ".--.", "--.-", ".-.",
-    "...", "-", "..-", "...-", ".--", "-..-", "-.--", "--.."]
+    # morse codes for a, b, c,..., respectively
+    morse_codes = [".-", "-...", "-.-.", "-..", ".", "..-.", "--.", "....", "..", ".---", "-.-", ".-..", "--", "-.",
+                   "---", ".--.", "--.-", ".-.", "...", "-", "..-", "...-", ".--", "-..-", "-.--", "--.."]
 
-    # Specifies characters that convert to a slash
-    sentenceEnders = [".", "?", "!", " "]
+    # specifies characters that convert to a slash
+    sentence_terminators = [".", "?", "!", " "]
 
-    # Go through the file line by line
+    # go through the file line by line
     with open(outputFileName, "a") as outputFile:
         for i in range(0, len(line) - 1):
             char = line[i]
 
-            if char in sentenceEnders:
+            if char in sentence_terminators:
                 outputFile.write("/")
             else:
-                # If the characters are lower-case, convert them to upper-case
+                # if the characters are lower-case, convert them to upper-case
                 if ord(char) < 97:
                     char = chr(ord(char) ^ 32)
 
-                outputFile.write(morseCodes[ord(char) - 97]+"/")
+                outputFile.write(morse_codes[ord(char) - 97] + "/")
 
         outputFile.write("\n")
 
-def fromMorseCode(line, outputFileName):
+
+def from_morse_code(line, output_file_name):
     """Converts a line of text from morse code to normal text and appends the
     result to a specified file."""
 
-    # The tree used to decode the message (https://i.redd.it/hu3t1it7p3sz.jpg)
-    decodingTree = ["","", "e", "t", "i", "a", "n", "m", "s", "u", "r", "w",
-    "d", "k", "g", "o", "h", "v", "f", "", "l", "", "p", "j", "b", "x", "c",
-    "y", "z", "q"]
+    # the tree used to decode the message (https://i.redd.it/hu3t1it7p3sz.jpg)
+    decoding_tree = ["", "", "e", "t", "i", "a", "n", "m", "s", "u", "r", "w", "d", "k", "g", "o", "h", "v", "f", "",
+                     "l", "", "p", "j", "b", "x", "c", "y", "z", "q"]
 
-    # The current index of a character that is being selected in the tree
-    charPosition = 1
+    # the current index of a character that is being selected in the tree
+    char_position = 1
 
-    # Whether to write a capital letter or not
-    writeCapitalLetter = True
+    # whether to write a capital letter or not
+    write_capital_letter = True
 
-    with open(outputFileName, "a") as outputFile:
-        # Go char by char (excluding the last char - a newline)
+    with open(output_file_name, "a") as output_file:
+        # go char by char (excluding the last char - a newline)
         for i in range(0, len(line) - 1):
             char = line[i]
 
-            # If there is an end character
+            # if there is an end character
             if char == "/":
-                # If we just wrote a character, print some sort of a separator
-                # character. If not, write it.
-                if charPosition == 1:
-                    # If there are two in a row, this has to be a dot. If not,
-                    # it is only a space
-                    if line[i:i+2] == "//":
-                        outputFile.write(".")
-                        writeCapitalLetter = True
+                # if we just wrote a character, print some sort of a separator character; if not, write the character
+                if char_position == 1:
+                    # if there are two in a row, it has to be a dot; if not, it is only a space
+                    if line[i:i + 2] == "//":
+                        output_file.write(".")
+                        write_capital_letter = True
                     else:
-                        outputFile.write(" ")
+                        output_file.write(" ")
                 else:
-                    character = decodingTree[charPosition]
+                    character = decoding_tree[char_position]
 
-                    if (writeCapitalLetter):
+                    # if the letter needs to be capitalized
+                    if write_capital_letter:
                         character = chr(ord(character) ^ 32)
-                        writeCapitalLetter = False
+                        write_capital_letter = False
 
-                    outputFile.write(character)
-                    charPosition = 1
+                    output_file.write(character)
+                    char_position = 1
             else:
-                # Move in the tree (. is to the left, - is to the right)
+                # move in the tree (. is to the left, - is to the right)
                 if char == ".":
-                    charPosition *= 2
+                    char_position *= 2
                 else:
-                    charPosition = charPosition * 2 + 1
+                    char_position = char_position * 2 + 1
 
-        outputFile.write("\n")
+        output_file.write("\n")
 
-inputFileName = input("Input file name: ")
-outputFileName = input("Output file name: ")
-conversionDirection = input("(T)o morse code or (F)rom morse code: ")
 
-# Read the input file
-with open(inputFileName, "r") as inputFile:
-    # Convert each line
+input_file_name = input("Input file name: ")
+output_file_name = input("Output file name: ")
+conversion_direction = input("(T)o morse code or (F)rom morse code: ")
+
+# read the input file
+with open(input_file_name, "r") as inputFile:
+    # convert it according to the direction of the conversion
     for line in inputFile:
-        if conversionDirection == "T":
-            toMorseCode(line, outputFileName)
-        elif conversionDirection == "F":
-            fromMorseCode(line, outputFileName)
+        if conversion_direction == "T":
+            to_morse_code(line, output_file_name)
+        elif conversion_direction == "F":
+            from_morse_code(line, output_file_name)
 
-input()
+input("Done!")

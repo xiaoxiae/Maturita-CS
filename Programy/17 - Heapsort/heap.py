@@ -1,58 +1,52 @@
 from math import inf
-from random import randint
+
 
 class Heap:
     """Implements a heap with some basic operations."""
-    # A list that will hold the data of the heap
     heap = []
 
-    def __init__(self, list):
-        """Heapify the list"""
-        self.heap = list
+    def __init__(self, default_values):
+        """Initializes the heap from an iterable of default values."""
+        self.heap = default_values
 
-        # Shift down all the elements (from last to first), takes O(n)
-        for i in reversed(range(len(list))):
-            self.shiftDown(i)
+        # shift down all the elements (from last to first); takes O(n)
+        for i in reversed(range(len(default_values))):
+            self._shift_down(i)
+
+    def __str__(self):
+        """Defines the string representation of the Heap object as a str(...) call on the heap list."""
+        return str(self.heap)
 
     def add(self, element):
-        """Add an element to a heap in O(log(n)) - shifts up."""
+        """Add an element to a heap by shifting it up. Takes O(log(n))."""
         self.heap.append(element)
 
-        i = len(self.heap) - 1      # the last element (the newly added one)
-        parent = self.getParent(i)  # it's parent
-
-        # While the parent is smaller, swap it and the parent
-        while(parent[0] < self.heap[i]):
-            self.heap[parent[1]], self.heap[i] = self.heap[i], self.heap[parent[1]]
-
-            # change i to the index of the parent and the parent of it's parent
-            i = parent[1]
-            parent = self.getParent(i)
+        self._shift_up(len(self.heap) - 1)
 
     def sorted(self):
-        """Perform heapsort, return the sorted array. Note that this empties the
-        heap."""
+        """Return the sorted array. Note that this empties the heap."""
         array = []
 
-        # While there are elements in the heap, pop the biggest one
+        # while there are elements in the heap, pop the biggest one
         while len(self.heap) > 0:
             array.append(self.pop())
 
         return list(reversed(array))
 
     def pop(self):
-        """Pops the biggest value from the heap in O(log(n))."""
+        """Pops the biggest value from the heap. Takes O(log(n))."""
         if len(self.heap) == 0:
             return None
         elif len(self.heap) == 1:
             return self.heap.pop()
 
-        maxValue = self.heap[0]
+        biggest_value = self.heap[0]
 
+        # replaces the first element with the last one and shifts it down
         self.heap[0] = self.heap.pop()
-        self.shiftDown(0)
+        self._shift_down(0)
 
-        return maxValue
+        return biggest_value
 
     def peek(self):
         """Returns the biggest value from the heap without popping it."""
@@ -61,34 +55,39 @@ class Heap:
         else:
             return self.heap[0]
 
-    def shiftDown(self, i):
+    def _shift_down(self, i):
         """Shifts a number at an index down, until it is in the correct spot."""
-        mChild = max(self.getChildren(i))
+        biggest_child = max(self._get_children(i))
 
-        # Swap until our number is not bigger than the biggest of its children
-        while self.getValue(i) <= mChild[0]:
-            self.heap[i], self.heap[mChild[1]] = self.heap[mChild[1]], self.heap[i]
+        # swap until the number is not bigger than the biggest of its children
+        while self._get_value(i) < biggest_child[0]:
+            self.heap[i], self.heap[biggest_child[1]] = self.heap[biggest_child[1]], self.heap[i]
 
-            i = maxChild[1]
-            maxChild = max(self.getChildren(i))
+            i = biggest_child[1]
+            biggest_child = max(self._get_children(i))
 
-    def getValue(self, index):
-        """Returns the value at a specified index of the heap."""
-        if index < 0:
-            # Infinity if it's above the root
-            return inf
-        elif index >= len(self.heap):
-            # -Infinity if it's bigger than the list (would be potential child)
-            return -inf
-        else:
-            # Otherwise it's ok to return the value
-            return self.heap[index]
+    def _shift_up(self, i):
+        """Shifts a number at an index up, until it is in the correct spot."""
+        parent = self._get_parent_index(i)  # the index of it's
 
-    def getChildren(self, index):
-        """Returns the children of an index."""
-        return [(self.getValue(2*(index+1)-1), 2*(index+1)-1),
-                (self.getValue(2*(index+1)), 2*(index+1))]
+        # while the parent is smaller, swap it and the parent
+        while self._get_value(parent) < self.heap[i]:
+            self.heap[parent], self.heap[i] = self.heap[i], self.heap[parent]
 
-    def getParent(self, index):
-        """Returns the parent of an index."""
-        return [self.getValue((index+1)//2-1), (index+1)//2-1]
+            # change i to the index of the parent and the parent to it's parent
+            i = parent
+            parent = self._get_parent_index(parent)
+
+    def _get_value(self, index):
+        """Returns the value at a specified index of the heap, or +/- infinity if the index is outside the heap."""
+        return inf if index < 0 else -inf if index >= len(self.heap) else self.heap[index]
+
+    def _get_children(self, index):
+        """Returns the indexes and values of the children of an index."""
+        i1, i2 = 2 * (index + 1) - 1, 2 * (index + 1)
+
+        return [(self._get_value(i1), i1), (self._get_value(i2), i2)]
+
+    def _get_parent_index(self, index):
+        """Returns the index of the parent of an index."""
+        return (index + 1) // 2 - 1

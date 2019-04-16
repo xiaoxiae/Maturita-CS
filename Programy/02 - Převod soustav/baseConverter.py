@@ -10,12 +10,10 @@ sum = 0
 for char in numberString:
     sum = sum * baseFrom + chars.index(char)
 
-# convers the number to the specified base
+# converts the number to the specified base
 result = ""
 while sum > 0:
     result = chars[int(sum % baseTo)] + result
     sum = (sum - (sum % baseTo)) // baseTo
 
-print("Number "+numberString+" in base "+str(baseTo)+" is "+result)
-
-input()
+input("Number " + numberString + " in base " + str(baseTo) + " is " + result)

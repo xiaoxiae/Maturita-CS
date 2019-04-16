@@ -21,11 +21,7 @@ for i in range(2, factorial):
 # print the result (it's reversed, so print in reverse)
 print(str(factorial)+"! = ", end="")
 
-# 0! = 1
 if factorial == 0:
-    print("1")
+    input("1")
 else:
-    for number in reversed(result):
-        print(number, end="")
-
-input()
+    input("".join(map(str, reversed(result))))
