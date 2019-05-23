@@ -19,7 +19,7 @@ for i in range(2, factorial):
         carry //= 10
 
 # print the result (it's reversed, so print in reverse)
-print(str(factorial)+"! = ", end="")
+print(str(factorial) + "! = ", end="")
 
 if factorial == 0:
     input("1")

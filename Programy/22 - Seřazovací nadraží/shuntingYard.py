@@ -1,47 +1,46 @@
 from math import log, acos, asin, atan, cos, sin, tan, e, sqrt, radians, degrees
 
+
 def evaluateExpression(expression):
     """Evaluates an arithmetic expression."""
-    # TODO: Add support for multiple types of parentheses.
-        # TODO: Correctly handle bracketing issues (without another function)
 
     # Synthesize the input
     expression = expression.replace(" ", "")
 
-    # Return nothing if the input is empty after synthetization
+    # Return nothing if the input is empty after sanitization
     if len(expression) == 0:
         return ""
     elif not isBracketingCorrect(expression):
         return "Wrong bracketing!"
 
     # Information about operators
-    operators = {"+":[lambda a, b: a+b, 1],
-                 "-":[lambda a, b: a-b, 1],
-                 "*":[lambda a, b: a*b, 2],
-                 "%":[lambda a, b: a%b, 2],
-                 "/":[lambda a, b: a/b, 2],
-                 "^":[lambda a, b: a**b, 3]}
+    operators = {"+": [lambda a, b: a + b, 1],
+                 "-": [lambda a, b: a - b, 1],
+                 "*": [lambda a, b: a * b, 2],
+                 "%": [lambda a, b: a % b, 2],
+                 "/": [lambda a, b: a / b, 2],
+                 "^": [lambda a, b: a ** b, 3]}
 
     # The function dictionary
-    functions = {"log":lambda x: log(x, 10),
-                 "ln":lambda x: log(x, e),
-                 "acos":lambda x: acos(x),
-                 "asin":lambda x: asin(x),
-                 "atan":lambda x: atan(x),
-                 "cos":lambda x: cos(x),
-                 "sin":lambda x: sin(x),
-                 "tan":lambda x: tan(x),
-                 "rad":lambda x: radians(x),
-                 "deg":lambda x: degrees(x),
-                 "sqrt":lambda x: sqrt(x)}
+    functions = {"log": lambda x: log(x, 10),
+                 "ln": lambda x: log(x, e),
+                 "acos": lambda x: acos(x),
+                 "asin": lambda x: asin(x),
+                 "atan": lambda x: atan(x),
+                 "cos": lambda x: cos(x),
+                 "sin": lambda x: sin(x),
+                 "tan": lambda x: tan(x),
+                 "rad": lambda x: radians(x),
+                 "deg": lambda x: degrees(x),
+                 "sqrt": lambda x: sqrt(x)}
 
-    numberStack = []    # Used for computing the expression
-    operatorStack = []  # Operators waiting to be used
+    numberStack = []
+    operatorStack = []
 
     i = 0
 
     while i < len(expression):
-        if expression[i].isdigit(): # If it's a digit
+        if expression[i].isdigit():  # if it's a digit
             multiplier = 1
 
             j = getNumberEndIndex(i, expression)
@@ -64,7 +63,7 @@ def evaluateExpression(expression):
             # i gets incremented at the end of the while loop, that's why -1
             i = j - 1
 
-        elif expression[i].isalpha():   # If it's a letter, ignore it
+        elif expression[i].isalpha():  # If it's a letter, ignore it
             pass
         elif expression[i] == "(":  # If it's an opening bracket
             # If there is a function in front of it, get the starting index
@@ -93,7 +92,7 @@ def evaluateExpression(expression):
                 if result != None:
                     return result
 
-        elif expression[i] in operators:    # If it's an operator
+        elif expression[i] in operators:  # If it's an operator
             # If it's a + or - and the number stack is empty, ignore it
             if expression[i] == "+" or expression[i] == "-":
                 if i == 0 or expression[i - 1] == "(":
@@ -129,6 +128,7 @@ def evaluateExpression(expression):
     else:
         return numberStack[0]
 
+
 def isBracketingCorrect(expression):
     """Checks, whether bracketing used in an expression is correct"""
     # Brackets to look for
@@ -158,6 +158,7 @@ def isBracketingCorrect(expression):
     else:
         return True
 
+
 def computeOperator(numberStack, operatorLambda):
     """Computes the result of an infix operator and adds it to the stack. If an
     error occurs whilst doing so, the function returns the error statement. If
@@ -170,21 +171,20 @@ def computeOperator(numberStack, operatorLambda):
     except IndexError:
         return "Missmatched operators!"
 
-    # Special case for 0^0 (Python thinks it's 1 and it really is not)
-    if (a == 0 and b == 0 and operatorLambda(a, b) == 1):
-        return "Result undefined!"
-
+    # catch a potential division by zero exception
     try:
         numberStack.append(operatorLambda(a, b))
     except ZeroDivisionError:
         return "Division by zero!"
 
-def computeFunction(numberStack, functionLambda):
-    """Computes a one-parameter (function) lambda on a number. If an error
-    occurs whilst doing so, the function returns the error statement. If the
-    computation was successful, nothing is returned."""
-    number, result = None, None
+    # special case for 0^0 (Python thinks it's 0)
+    if a == 0 and b == 0 and operatorLambda(a, b) == 1:
+        return "Result undefined!"
 
+
+def computeFunction(numberStack, functionLambda):
+    """Computes a one-parameter (function) lambda on a number. If an error occurs whilst doing so, the function returns
+    the error statement. If the computation was successful, nothing is returned. """
     try:
         number = numberStack.pop()
     except IndexError:
@@ -197,12 +197,14 @@ def computeFunction(numberStack, functionLambda):
 
     numberStack.append(result)
 
+
 def getNumberEndIndex(i, expr):
     """Returns the ending index of a number starting at a certain index."""
     while i < len(expr) and (expr[i].isdigit() or expr[i] == "."):
         i += 1
 
     return i
+
 
 def getFunctionStartIndex(j, expr):
     """Return the starting index of a function ending at a certain index."""
@@ -211,11 +213,10 @@ def getFunctionStartIndex(j, expr):
 
     return j + 1
 
-# The "user interface"
-while True:
-    expression = input("> ")
-    evaluatedExpression = evaluateExpression(expression)
 
-    # If the function returned an expression
-    if evaluatedExpression != "":
-        print(evaluatedExpression)
+# run the user interface forever
+while True:
+    result = evaluateExpression(input("> "))
+
+    if result != "":
+        print(result)
